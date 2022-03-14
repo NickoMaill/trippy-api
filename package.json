@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/NickoMaill/trippy-api/issues"
   },
-  "homepage": "https://github.com/NickoMaill/trippy-api#readme"
+  "homepage": "https://github.com/NickoMaill/trippy-api#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "joi": "^17.6.0"
+  }
 }
