@@ -19,21 +19,14 @@ app.get("/", (_req, res) => {
 })
 
 // HOTELS
-
-//Diplay all hotels
-app.get("/hotels", hotelRouter);
-
-//add hotel
-app.post("/hotels", hotelRouter);
-
-//update hotel name
-app.patch("/hotels/:id/name", hotelRouter);
-
-app.delete("/hotels/:id", hotelRouter);
+app.get("/hotels", hotelRouter); //Display all hotels
+app.post("/hotels", hotelRouter); //add hotel
+app.patch("/hotels/:id/name", hotelRouter); //update hotel name
+app.delete("/hotels/:id", hotelRouter); //delete hotel
 
 // Handle errors
 app.get("*", (_req, res) => {
-	res.status(404).send("Page not found");
+    res.status(404).send("Page not found");
 });
 
 
