@@ -12,18 +12,21 @@ const hotel = Joi.object({
     stars: Joi.number().min(1).max(5).required(),
     hasSpa: Joi.boolean().required(),
     hasPool: Joi.boolean().required(),
-    priceCategory:Joi.number().min(1).max(3).required(),
+    priceCategory: Joi.number().min(1).max(3).required(),
 })
 
-//Middleware function to find hotel by id 
-function findId(req, res, next) {
-	const hotel = hotels[req.params.id - 1]
+//Middlewares
 
-    if (req.params.id < hotels.length || req.params.id > hotels.length) {
-        return res.status(404).json({message: "Id not found"})
+//Function to find hotel by id 
+function findId(req, res, next) {
+    const hotel = hotels[req.params.id - 1]
+    const id = parseInt(req.params.id)
+
+    if (id < 1 || id > hotels.length) {
+        return res.status(404).json({ message: "Id not found" })
     }
-    res.json(hotel)
-	next();
+    req.hotel = hotel;
+    next();
 }
 //Function to validate hotel adding
 function validHotel(req, res, next) {
@@ -46,7 +49,7 @@ router.get("/hotels", (_req, res) => {
         res.json(hotels)
 
     } else {
-        res.json({message: "No Hotels"})
+        res.json({ message: "No Hotels" })
     }
 
 })
@@ -56,8 +59,9 @@ router.get("/hotels/:id", findId, (req, res) => {
     res.json(req.id)
 })
 
-router.post("/hotels",validHotel, (req, res)=> {
-    console.log("request received");
+// route to add a new hotel
+router.post("/hotels", validHotel, (req, res) => {
+    console.info("request received");
 
     hotels.push({
         id: hotels.length + 1,
@@ -74,13 +78,24 @@ router.post("/hotels",validHotel, (req, res)=> {
     res.status(201).json({
         message: "Hotel added",
         hotels
-    })
-})
+    });
+});
+
+// Update
+router.patch("/hotels/:id/name", findId, (req, res) => {
+    const hotel = req.hotel
+    console.log(hotel.name);
+    hotel.name = req.body.name
+
+    res.json({
+        message:"name updated",
+        hotel,
+    });
+});
 
 //copy and paste it postman
 
 // {
-//     "id": 1,
 //     "name": "Hilton Paris Opera",
 //     "address": "108 rue Saint Lazare",
 //     "city": "Paris",
