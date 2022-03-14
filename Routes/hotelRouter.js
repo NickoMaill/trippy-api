@@ -20,7 +20,7 @@ function findId(req, res, next) {
 	const hotel = hotels[req.params.id - 1]
 
     if (req.params.id < hotels.length || req.params.id > hotels.length) {
-        return res.status(404).send("Id not found")
+        return res.status(404).json({message: "Id not found"})
     }
     res.json(hotel)
 	next();
@@ -32,7 +32,7 @@ router.get("/hotels", (_req, res) => {
         res.json(hotels)
 
     } else {
-        res.send("No Hotels")
+        res.json({message: "No Hotels"})
     }
 
 })
