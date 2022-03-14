@@ -29,10 +29,13 @@ app.post("/hotels", hotelRouter);
 //update hotel name
 app.patch("/hotels/:id/name", hotelRouter);
 
+app.delete("/hotels/:id", hotelRouter);
+
 // Handle errors
 app.get("*", (_req, res) => {
 	res.status(404).send("Page not found");
 });
+
 
 //Server Listener
 app.listen(PORT, () => console.log("Listening on port 8000"));

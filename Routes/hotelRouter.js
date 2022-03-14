@@ -1,6 +1,6 @@
 const express = require("express");
-const Joi = require("joi");
 const router = express.Router();
+const Joi = require("joi");
 const hotels = require("../data/hotel.json")
 
 //Joi validation schema
@@ -19,9 +19,12 @@ const hotel = Joi.object({
 
 //Function to find hotel by id 
 function findId(req, res, next) {
-    const hotel = hotels[req.params.id - 1]
+    // const hotel = hotels[req.params.id - 1]
     const id = parseInt(req.params.id)
-
+    const hotel = hotels.find((_hotel, i) => {
+        const id = i + 1;
+        return req.params.id === id.toString()
+    })
     if (id < 1 || id > hotels.length) {
         return res.status(404).json({ message: "Id not found" })
     }
@@ -91,6 +94,27 @@ router.patch("/hotels/:id/name", findId, (req, res) => {
         message:"name updated",
         hotel,
     });
+});
+
+router.delete("/hotels/:id", (req, res) => {
+
+    const hotel = hotels.find((hotel) => {
+        return(
+            hotel.id.toString() === req.params.id
+        );
+    });
+    if (hotel) {
+        hotels.splice(hotels.indexOf(hotel), 1)
+        res.json({
+            message: "hotel deleted",
+            hotels,
+        })
+    } else {
+        res.status(404).json({
+            message: "Error 404 not found",
+            description: "this hotel dose not exist"
+        });
+    }
 });
 
 //copy and paste it postman
