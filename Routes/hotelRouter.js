@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const Joi = require("joi");
+const router = express.Router();
+const hotels = require("../data/hotel.json")
 
 const hotel = Joi.object({
     name: Joi.string().max(30),
@@ -11,4 +13,9 @@ const hotel = Joi.object({
     hasSpa: Joi.boolean(),
     hosPool: Joi.boolean(),
     priceCategory:Joi.number().min(1).max(3)
+})
+
+
+router.get("/hotels", (req, res) => {
+    res.json(hotels)
 })
