@@ -5,11 +5,13 @@ const PORT = 8000;
 
 //Middlewares
 app.use(express.json());
-app.get("/hotels", hotelRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.send("Welcome on Trippy API")
 })
 
+app.get("/hotels", hotelRouter);
+
+app.get("/hotels/:id", hotelRouter)
 
 app.listen(PORT, () => console.log("Listening on port 8000"));

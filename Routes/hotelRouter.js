@@ -14,18 +14,15 @@ const hotel = Joi.object({
     priceCategory:Joi.number().min(1).max(3).required(),
 })
 
-// function validHotel(req, res, next) {
-//     const validation = user.validHotel(req.body)
+function findId(req, res, next) {
+	const hotel = hotels[req.params.id - 1]
 
-//     if (validHotel.error) {
-//         return res.status(400).json({
-//             message: "Error 400",
-//             description: validHotel.error.details[0].message,
-//         })
-//     }
-
-//     next();
-// }
+    if (req.params.id < hotels.length || req.params.id > hotels.length) {
+        return res.status(404).send("Id not found")
+    }
+    res.json(hotel)
+	next();
+}
 
 router.get("/hotels", (_req, res) => {
     console.log(hotels);
@@ -34,6 +31,10 @@ router.get("/hotels", (_req, res) => {
     } else {
         res.send("No Hotels")
     }
+})
+
+router.get("/hotels/:id", findId, (req, res) => {
+    res.json(req.id)
 })
 
 module.exports = router;
