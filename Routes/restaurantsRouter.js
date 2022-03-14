@@ -12,3 +12,5 @@ const restaurant = Joi.object({
     priceCategory: Joi.number().min(1).max(3),
 })
 
+
+
