@@ -1,6 +1,4 @@
 const express = require("express");
-const req = require("express/lib/request");
-const { object } = require("joi");
 const router = express.Router();
 const Joi = require("joi");
 const restaurants = require("../data/restaurant.json")
