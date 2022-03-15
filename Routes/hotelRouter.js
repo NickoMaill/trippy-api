@@ -5,10 +5,10 @@ const hotels = require("../data/hotel.json")
 
 //Joi validation schema
 const hotel = Joi.object({
-    name: Joi.string().required(),
-    address: Joi.string().required(),
-    city: Joi.string().required(),
-    country: Joi.string().required(),
+    name: Joi.string().min(1).max(30).required(),
+    address: Joi.string().min(1).max(50).required(),
+    city: Joi.string().min(1).max(30).required(),
+    country: Joi.string().min(1).max(30).required(),
     stars: Joi.number().min(1).max(5).required(),
     hasSpa: Joi.boolean().required(),
     hasPool: Joi.boolean().required(),
