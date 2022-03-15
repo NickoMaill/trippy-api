@@ -64,10 +64,37 @@ router.get("/hotels/:id", findId, (req, res) => {
 
 // route to add a new hotel
 router.post("/hotels", validHotel, (req, res) => {
+
+    function uniqueRandom(minRandom, maxRandom) { // function to attribute unique random Id 
+
+        const uniqueNumber = Math.floor(Math.random() * (maxRandom - minRandom + 1) + minRandom) // set the random id
+
+        const newLengthArray = hotels.length + minRandom // set the length off array plus minimum random parameter to prevent function when array is full
+
+        const findNewId = hotels.find((findNewId) => { // const that search match in hotels.json
+            return (
+                findNewId.id === uniqueNumber
+            );
+        })
+
+        if (newLengthArray.length === maxRandom) { // guard to prevent infinite loop & bug 
+            return console.log("all value are assigned");
+            
+        } else { 
+
+            if (findNewId !== undefined ) { // if findNewId match something it relaunch the function as for as got a valid Id 
+                uniqueRandom(maxRandom, minRandom)
+
+            } else {
+                return uniqueNumber // then we return our random unique ID
+            }
+        }
+    }
+
     console.info("request received");
 
     hotels.push({
-        id: hotels.length + 1,
+        id: uniqueRandom(100, 999),
         name: req.body.name,
         address: req.body.address,
         city: req.body.city,

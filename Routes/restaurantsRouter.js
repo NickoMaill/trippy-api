@@ -72,34 +72,34 @@ router.get("/restaurants/:id", findId, (req, res) => {
 
 // route to add a new restaurant
 router.post("/restaurants", validrestaurant, (req, res) => {
+    console.info("request received");
 
-    function uniqueRandom(minRandom, maxRandom) {
+    function uniqueRandom(minRandom, maxRandom) { // function to attribute unique random Id 
 
-        const uniqueNumber = Math.floor(Math.random() * (maxRandom - minRandom + 1) + minRandom)
-        const newLengthArray = restaurants.length + minRandom
-        let newId = null;
+        const uniqueNumber = Math.floor(Math.random() * (maxRandom - minRandom + 1) + minRandom) // set the random id
 
-        const findNewId = restaurants.find((findNewId) => {
+        const newLengthArray = restaurants.length + minRandom // set the length off array plus minimum random parameter to prevent function when array is full
+
+        const findNewId = restaurants.find((findNewId) => { // const that search match in restaurants.json
             return (
                 findNewId.id === uniqueNumber
             );
         })
 
-        if (newLengthArray.length === maxRandom) {
-            return console.log("all value are in array");
-        } else {
-            console.log("findNewId", findNewId);
-            if (findNewId !== undefined ) {
-                console.log("oups");
+        if (newLengthArray.length === maxRandom) { // guard to prevent infinite loop & bug 
+            return console.log("all value are assigned");
+            
+        } else { 
+
+            if (findNewId !== undefined ) { // if findNewId match something it relaunch the function as for as got a valid Id 
                 uniqueRandom(maxRandom, minRandom)
+
             } else {
-                return newId = uniqueNumber
+                return uniqueNumber // then we return our random unique ID
             }
         }
-
-
     }
-    console.info("request received");
+    
 
     restaurants.push({
         id: uniqueRandom(100, 999),
