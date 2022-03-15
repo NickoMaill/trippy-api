@@ -57,10 +57,18 @@ router.get("/restaurants/:country", (req, res) => {
     const newRes = restaurants.filter(restaurant => {
         return restaurant.country.toLowerCase() === req.params.country.toLowerCase()
     });
-    res.json({
-        message: `Restaurants in ${req.params.id.toUpperCase()}`,
-        newRes
-    })
+
+    if (newRes.length > 0 ) {
+        res.json({
+            message: `Restaurants in ${req.params.country.charAt(0).toUpperCase() + req.params.country.slice(1)}`,
+            newRes
+        })
+        
+    } else {
+        res.json({
+            message: "no country match found"
+        })
+    }
 
 
 })

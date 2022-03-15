@@ -1,6 +1,6 @@
 [
 	{
-		"id": 1,
+		"id": 359,
 		"name": "Imperial Hotel",
 		"address": "84 av des Champs-Élysées",
 		"city": "Paris",
@@ -11,7 +11,7 @@
 		"priceCategory": 3
 	},
 	{
-		"id": 2,
+		"id": 789,
 		"name": "The Queen",
 		"address": "3 Darwin Street",
 		"city": "London",
@@ -22,7 +22,7 @@
 		"priceCategory": 3
 	},
 	{
-		"id": 3,
+		"id": 123,
 		"name": "Kiwi land",
 		"address": "4587 George St.",
 		"city": "Auckland",
