@@ -15,18 +15,15 @@ const newRestaurant = Joi.object({
 
 //MIDDLEWARE
 
-//function to find id
+// function to find id
 function findId(req, res, next) {
-    // const restaurant = restaurants[req.params.id - 1]
-    const id = parseInt(req.params.id)
-    const restaurant = restaurants.find((_restaurant, i) => {
-        const id = i + 1;
-        return req.params.id === id.toString()
+
+    const id = req.params.id
+    const restaurant = restaurants.find((restaurant) => {
+        return id === restaurant.id.toString()
     })
-    if (id < 1 || id > restaurants.length) {
-        return res.status(404).json({ message: "Id not found" })
-    }
-    req.restaurant = restaurant;
+    console.log(req.restaurant);
+    req.restaurant = restaurant
     next();
 }
 //Function to validate restaurant adding
@@ -121,8 +118,8 @@ router.get("/restaurants/cuisine/:cuisine", (req, res) => {
 })
 
 //route to get restaurant by Id
-router.get("/restaurants/:id", findId, (req, res) => {
-    res.json(req.id)
+router.get("/restaurants/id/:id", findId, (req, res) => {
+    res.json(req.restaurant)
 })
 
 // route to add a new restaurant

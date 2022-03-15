@@ -1,6 +1,7 @@
 // Import
 const express = require("express");
 const app = express();
+const rateLimit = require("express-rate-limit")
 
 //Routers
 const hotelRouter = require("./Routes/hotelRouter");
@@ -36,6 +37,7 @@ app.delete("/hotels/:id", hotelRouter); //delete hotel
 
 //GET
 app.get("/restaurants", restaurantRouter); //Dipslay all restaurant
+app.get("/restaurants/id/:id", restaurantRouter)
 app.get("/restaurants/:country", restaurantRouter); // display restaurant by country
 app.get("/restaurants/price/:price", restaurantRouter) //display restaurant by price range
 app.get("/restaurants/cuisine/:cuisine", restaurantRouter) // display restaurant by cuisine type

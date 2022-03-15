@@ -17,7 +17,7 @@ const hotel = Joi.object({
 
 //Middlewares
 
-//Function to find hotel by id 
+// Function to find hotel by id 
 function findId(req, res, next) {
     // const hotel = hotels[req.params.id - 1]
     const id = parseInt(req.params.id)
@@ -31,6 +31,7 @@ function findId(req, res, next) {
     req.hotel = hotel;
     next();
 }
+
 //Function to validate hotel adding
 function validHotel(req, res, next) {
     const validation = hotel.validate(req.body)
@@ -45,6 +46,21 @@ function validHotel(req, res, next) {
     next();
 }
 
+function findHotel(result, res, string, slave) {
+
+    if (result.length > 0) {
+        return res.json({
+            message: `${string} in ${slave.charAt(0).toUpperCase() + slave.slice(1)}`,
+            result
+        })
+
+    } else {
+        return res.json({
+            message: `no ${string} match found`
+        })
+    }
+}
+
 //Route to get all hotels
 router.get("/hotels", (_req, res) => {
 
@@ -55,6 +71,39 @@ router.get("/hotels", (_req, res) => {
         res.json({ message: "No Hotels" })
     }
 
+})
+
+//route to get hotel by Id
+router.get("/hotels/:id", findId, (req, res) => {
+    res.json(req.id)
+})
+
+router.get("/hotels/:country", (req, res) => {
+
+    const newRes = hotels.filter(hotel => {
+        return hotel.country.toLowerCase() === req.params.country.toLowerCase()
+    });
+
+    findHotel(newRes, res, "country", req.params.country);
+})
+
+// get hotel by price range
+router.get("/hotels/price/:price", (req, res) => {
+
+    const newRes = hotels.filter(hotel => {
+        return hotel.priceCategory.toString() === req.params.price.toString()
+    });
+
+    findHotel(newRes, res, "price rating", req.params.price)
+})
+
+//get hotels by cuisine type
+router.get("/hotels/cuisine/:cuisine", (req, res) => {
+    const newRes = hotels.filter(hotel => {
+        return hotel.cuisine.toString() === req.params.cuisine.toString()
+    });
+
+    findHotel(newRes, res, "cuisine", req.params.cuisine)
 })
 
 //route to get hotel by Id
