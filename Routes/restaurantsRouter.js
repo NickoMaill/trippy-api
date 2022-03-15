@@ -63,22 +63,31 @@ function findRestaurant(result, res, string, slave) {
 //Route to get all restaurants
 router.get("/restaurants", (req, res) => {
 
-    if (restaurants.length > 0) {
+    console.log(req.query);
+    if (restaurants.length > 0 && Object.keys(req.query).length < 3) {
         res.json(restaurants)
 
     } else {
-        res.json({ message: "No Restaurants" })
+
+        if (restaurants.length > 0 && Object.keys(req.query).length > 2) {
+    
+            const filteredRestaurants = restaurants.filter((restaurant) => {
+                return (
+                    restaurant.country.toLowerCase() === req.query.country.toLowerCase() &&
+                    restaurant.priceCategory.toString() === req.query.price &&
+                    restaurant.cuisine === req.query.cuisine
+                )
+    
+            })
+            res.json(filteredRestaurants)
+    
+        } else {
+            res.json({ message: "No Restaurants" })
+    
+        }
     }
+    
 
-    const filteredRestaurants = restaurants.filter((restaurant) => {
-        return (
-            restaurant.country === req.query.country &&
-            restaurant.priceCategory.toString() === req.query.priceCategory &&
-            restaurant.cuisine === req.query.cuisine
-
-        )
-    })
-    res.json(filteredRestaurants)
 
 })
 
