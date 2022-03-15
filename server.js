@@ -9,8 +9,8 @@ const restaurantRouter = require("./Routes/restaurantsRouter")
 //Server PORT
 const PORT = 8000;
 
-//Middlewares
 app.use(express.json());
+app.use("/hotels", hotelRouter); 
 
 //Routes
 
@@ -28,6 +28,7 @@ app.delete("/hotels/:id", hotelRouter); //delete hotel
 //RESTAURANT
 app.get("/restaurants", restaurantRouter);
 app.get("/restaurants/:country", restaurantRouter);
+app.get("/restaurants/price/:price", restaurantRouter)
 app.post("/restaurants", restaurantRouter);
 app.patch("/restaurants/:id/name", restaurantRouter);
 app.delete("/restaurants/:id", restaurantRouter);

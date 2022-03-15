@@ -1,4 +1,6 @@
 const express = require("express");
+const req = require("express/lib/request");
+const { object } = require("joi");
 const router = express.Router();
 const Joi = require("joi");
 const restaurants = require("../data/restaurant.json")
@@ -13,6 +15,9 @@ const newRestaurant = Joi.object({
     priceCategory: Joi.number().min(1).max(3).required(),
 })
 
+//MIDDLEWARE
+
+//function to find id
 function findId(req, res, next) {
     // const restaurant = restaurants[req.params.id - 1]
     const id = parseInt(req.params.id)
@@ -39,37 +44,83 @@ function validrestaurant(req, res, next) {
 
     next();
 }
+//FUNCTION
+
+//function to validate search by country, price or whatever
+function findRestaurant(result, res, string, slave) {
+
+    if (result.length > 0) {
+        res.json({
+            message: `Restaurants in ${slave.charAt(0).toUpperCase() + slave.slice(1)}`,
+            result
+        })
+
+    } else {
+        res.json({
+            message: `no ${string} match found`
+        })
+    }
+}
 
 //Route to get all restaurants
-router.get("/restaurants", (_req, res) => {
+router.get("/restaurants", (req, res) => {
 
     if (restaurants.length > 0) {
         res.json(restaurants)
 
     } else {
-        res.json({ message: "No restaurants" })
+        res.json({ message: "No Restaurants" })
     }
+
+    const filteredRestaurants = restaurants.filter((restaurant) => {
+        return (
+            restaurant.country === req.query.country &&
+            restaurant.priceCategory.toString() === req.query.priceCategory &&
+            restaurant.cuisine === req.query.cuisine
+
+        )
+    })
+    res.json(filteredRestaurants)
 
 })
 
+//get restaurant by country
 router.get("/restaurants/:country", (req, res) => {
 
     const newRes = restaurants.filter(restaurant => {
         return restaurant.country.toLowerCase() === req.params.country.toLowerCase()
     });
 
-    if (newRes.length > 0 ) {
+    findRestaurant(newRes, res, "country", req.params.country);
+})
+
+// get restaurant by price range
+router.get("/restaurants/price/:price", (req, res) => {
+
+    const newRes = restaurants.filter(restaurant => {
+        return restaurant.priceCategory.toString() === req.params.price.toString()
+    });
+
+    findRestaurant(newRes, res, "price rating", req.params.price)
+})
+
+//get restaurants by cuisine type
+router.get("/restaurants/:cuisine", (req, res) => {
+    const newRes = restaurants.filter(restaurant => {
+        return restaurant.priceCategory.toString() === req.params.price.toString()
+    });
+
+    if (newRes.length > 0) {
         res.json({
             message: `Restaurants in ${req.params.country.charAt(0).toUpperCase() + req.params.country.slice(1)}`,
             newRes
         })
-        
+
     } else {
         res.json({
-            message: "no country match found"
+            message: "no price match found"
         })
     }
-
 
 })
 
@@ -96,10 +147,10 @@ router.post("/restaurants", validrestaurant, (req, res) => {
 
         if (newLengthArray.length === maxRandom) { // guard to prevent infinite loop & bug 
             return console.log("all value are assigned");
-            
-        } else { 
 
-            if (findNewId !== undefined ) { // if findNewId match something it relaunch the function as for as got a valid Id 
+        } else {
+
+            if (findNewId !== undefined) { // if findNewId match something it relaunch the function as for as got a valid Id 
                 uniqueRandom(maxRandom, minRandom)
 
             } else {
@@ -107,7 +158,7 @@ router.post("/restaurants", validrestaurant, (req, res) => {
             }
         }
     }
-    
+
 
     restaurants.push({
         id: uniqueRandom(100, 999),
@@ -127,7 +178,7 @@ router.post("/restaurants", validrestaurant, (req, res) => {
     });
 });
 
-// Update
+// Update name of a restaurant
 router.patch("/restaurants/:id/name", findId, (req, res) => {
     const restaurant = req.restaurant
     console.log(restaurant.name);
@@ -139,6 +190,7 @@ router.patch("/restaurants/:id/name", findId, (req, res) => {
     });
 });
 
+//delete a restaurant
 router.delete("/restaurants/:id", (req, res) => {
 
     const restaurant = restaurants.find((restaurant) => {
