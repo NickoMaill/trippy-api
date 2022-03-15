@@ -26,12 +26,13 @@ app.patch("/hotels/:id/name", hotelRouter); //update hotel name
 app.delete("/hotels/:id", hotelRouter); //delete hotel
 
 //RESTAURANT
-app.get("/restaurants", restaurantRouter);
-app.get("/restaurants/:country", restaurantRouter);
-app.get("/restaurants/price/:price", restaurantRouter)
-app.post("/restaurants", restaurantRouter);
-app.patch("/restaurants/:id/name", restaurantRouter);
-app.delete("/restaurants/:id", restaurantRouter);
+app.get("/restaurants", restaurantRouter); //Dipslay all restaurant
+app.get("/restaurants/:country", restaurantRouter); // display restaurant by country
+app.get("/restaurants/price/:price", restaurantRouter) //display restaurant by price range
+app.get("/restaurants/cuisine/:cuisine", restaurantRouter) // display restaurant by cuisine type
+app.post("/restaurants", restaurantRouter); // add a restaurant
+app.patch("/restaurants/:id/name", restaurantRouter); // modify restaurant name
+app.delete("/restaurants/:id", restaurantRouter); // delete a restaurant
 
 // Handle errors
 app.get("*", (_req, res) => {

@@ -48,13 +48,13 @@ function validrestaurant(req, res, next) {
 function findRestaurant(result, res, string, slave) {
 
     if (result.length > 0) {
-        res.json({
-            message: `Restaurants in ${slave.charAt(0).toUpperCase() + slave.slice(1)}`,
+        return res.json({
+            message: `${string} in ${slave.charAt(0).toUpperCase() + slave.slice(1)}`,
             result
         })
 
     } else {
-        res.json({
+        return res.json({
             message: `no ${string} match found`
         })
     }
@@ -70,23 +70,23 @@ router.get("/restaurants", (req, res) => {
     } else {
 
         if (restaurants.length > 0 && Object.keys(req.query).length > 2) {
-    
+
             const filteredRestaurants = restaurants.filter((restaurant) => {
                 return (
                     restaurant.country.toLowerCase() === req.query.country.toLowerCase() &&
                     restaurant.priceCategory.toString() === req.query.price &&
                     restaurant.cuisine === req.query.cuisine
                 )
-    
+
             })
             res.json(filteredRestaurants)
-    
+
         } else {
             res.json({ message: "No Restaurants" })
-    
+
         }
     }
-    
+
 
 
 })
@@ -112,23 +112,12 @@ router.get("/restaurants/price/:price", (req, res) => {
 })
 
 //get restaurants by cuisine type
-router.get("/restaurants/:cuisine", (req, res) => {
+router.get("/restaurants/cuisine/:cuisine", (req, res) => {
     const newRes = restaurants.filter(restaurant => {
-        return restaurant.priceCategory.toString() === req.params.price.toString()
+        return restaurant.cuisine.toString() === req.params.cuisine.toString()
     });
 
-    if (newRes.length > 0) {
-        res.json({
-            message: `Restaurants in ${req.params.country.charAt(0).toUpperCase() + req.params.country.slice(1)}`,
-            newRes
-        })
-
-    } else {
-        res.json({
-            message: "no price match found"
-        })
-    }
-
+    findRestaurant(newRes, res, "cuisine", req.params.cuisine)
 })
 
 //route to get restaurant by Id
