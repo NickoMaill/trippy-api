@@ -5,6 +5,7 @@ const Postgres = new Pool({ ssl: { rejectUnauthorized: false } });
 const dotenv = require("dotenv");
 const findHotelName = require("../middleware/findHotelName");
 const findHotelId = require("../middleware/findHotelId");
+const findHotelCountry = require("../middleware/findHotelCountry");
 dotenv.config({
 	path: "./config.env",
 });
@@ -24,8 +25,8 @@ router.get("/", async (_req, res) => {
 });
 
 //route to get hotel by Id
-router.get("/:id", findHotelId, async (req, res) => {
-	const hotel = await Postgres.query("SELECT * FROM hotels WHERE id=$1", [req.params.id]);
+router.get("/id/:id", findHotelId, async (req, res) => {
+	const hotel = await Postgres.query("SELECT * FROM hotels WHERE hotels.id=$1", [req.hotel.id]);
 
 	try {
 		hotel;
@@ -37,8 +38,8 @@ router.get("/:id", findHotelId, async (req, res) => {
 	res.json(hotel.rows);
 });
 
-router.get("/:name", findHotelName, async (req, res) => {
-	const hotel = await Postgres.query("SELECT * FROM hotels WHERE name=$1", [req.params.name]);
+router.get("/name/:name", findHotelName, async (req, res) => {
+	const hotel = await Postgres.query("SELECT * FROM hotels WHERE hotels.name=$1", [req.hotel.name]);
 
 	try {
 		hotel;
@@ -50,7 +51,18 @@ router.get("/:name", findHotelName, async (req, res) => {
 	res.json(hotel.rows);
 });
 
-router.get("/hotels/:country", (req, res) => {});
+router.get("/country/:country", findHotelCountry, async(req, res) => {
+	const hotels = await Postgres.query("SELECT * FROM hotels WHERE country=$1", [req.hotel.country]);
+    
+	try {
+		hotels;
+	} catch (err) {
+		return res.status(400).json({
+			message: "An error happened...",
+		});
+	}
+    res.json(hotels.rows)
+});
 
 // get hotel by price range
 router.get("/hotels/price/:price", (req, res) => {});
