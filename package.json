@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/NickoMaill/trippy-api#readme",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-rate-limit": "^6.3.0",
-    "joi": "^17.6.0"
+    "joi": "^17.6.0",
+    "pg": "^8.7.3"
   }
 }

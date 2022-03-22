@@ -1,23 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Joi = require("joi");
 const hotels = require("../data/hotel.json")
 
-//Joi validation schema
-const hotel = Joi.object({
-    name: Joi.string().min(1).max(30).required(),
-    address: Joi.string().min(1).max(50).required(),
-    city: Joi.string().min(1).max(30).required(),
-    country: Joi.string().min(1).max(30).required(),
-    stars: Joi.number().min(1).max(5).required(),
-    hasSpa: Joi.boolean().required(),
-    hasPool: Joi.boolean().required(),
-    priceCategory: Joi.number().min(1).max(3).required(),
-})
-
-//Middlewares
-
-// Function to find hotel by id 
 function findId(req, res, next) {
     // const hotel = hotels[req.params.id - 1]
     const id = parseInt(req.params.id)
