@@ -1,8 +1,12 @@
 // Import
 const express = require("express");
 const app = express();
-const rateLimit = require("express-rate-limit");
+// const rateLimit = require("express-rate-limit");
 const cors = require("./middleware/cors");
+const dotenv = require("dotenv");
+dotenv.config({
+	path: "../config.env",
+});
 
 //Routers
 const hotelRouter = require("./Routes/hotelRouter");
@@ -14,7 +18,7 @@ const PORT = 8000;
 app.use(express.json());
 app.use(cors);
 app.use("/hotels", hotelRouter);
-app.use("/restaurants", restaurantRouter);
+// app.use("/restaurants", restaurantRouter);
 
 // Handle errors
 app.get("*", (_req, res) => {
