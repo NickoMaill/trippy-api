@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const findHotelName = require("../middleware/findHotelName");
 const findHotelId = require("../middleware/findHotelId");
 const findHotelCountry = require("../middleware/findHotelCountry");
+const findPriceHotel = require("../middleware/findPriceHotel");
 dotenv.config({
 	path: "./config.env",
 });
@@ -51,9 +52,9 @@ router.get("/name/:name", findHotelName, async (req, res) => {
 	res.json(hotel.rows);
 });
 
-router.get("/country/:country", findHotelCountry, async(req, res) => {
+router.get("/country/:country", findHotelCountry, async (req, res) => {
 	const hotels = await Postgres.query("SELECT * FROM hotels WHERE country=$1", [req.hotel.country]);
-    
+
 	try {
 		hotels;
 	} catch (err) {
@@ -61,19 +62,30 @@ router.get("/country/:country", findHotelCountry, async(req, res) => {
 			message: "An error happened...",
 		});
 	}
-    res.json(hotels.rows)
+	res.json(hotels.rows);
 });
 
 // get hotel by price range
-router.get("/hotels/price/:price", (req, res) => {});
+router.get("/price/:price", findPriceHotel, async (req, res) => {
+    const hotels = await Postgres.query("SELECT * FROM hotels WHERE price_category=$1", [req.hotel.price_category]);
+
+	try {
+		hotels;
+	} catch (err) {
+		return res.status(400).json({
+			message: "An error happened...",
+		});
+	}
+	res.json(hotels.rows);
+});
 
 // route to add a new hotel
-router.post("/hotels", (req, res) => {});
+router.post("/", (req, res) => {});
 
 // Update
-router.patch("/hotels/:id/name", (req, res) => {});
+router.patch("/:id/name", (req, res) => {});
 
-router.delete("/hotels/:id", (req, res) => {});
+router.delete("/:id", (req, res) => {});
 
 //copy and paste it postman
 
