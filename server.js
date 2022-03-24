@@ -1,7 +1,7 @@
 // Import
 const express = require("express");
 const app = express();
-// const rateLimit = require("express-rate-limit");
+const rateLimit = require("express-rate-limit");
 const cors = require("./middleware/cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -15,6 +15,13 @@ mongoose
   })
   .then(() => console.log("connected to mongo"));
 
+const limiter = rateLimit({
+	windowMs: 5 * 60 * 1000, 
+	max: 1, 
+	standardHeaders: true,
+	legacyHeaders: false,
+})
+
 //Routers
 const hotelRouter = require("./Routes/hotelRouter");
 const restaurantRouter = require("./Routes/restaurantsRouter");
@@ -24,6 +31,7 @@ const PORT = 8000;
 
 app.use(express.json());
 app.use(cors);
+app.use(limiter)
 app.use("/hotels", hotelRouter);
 app.use("/restaurants", restaurantRouter);
 
