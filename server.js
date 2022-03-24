@@ -16,8 +16,8 @@ mongoose
   .then(() => console.log("connected to mongo"));
 
 const limiter = rateLimit({
-	windowMs: 5 * 60 * 1000, 
-	max: 1, 
+	windowMs: 1 * 60 * 1000, 
+	max: 60, 
 	standardHeaders: true,
 	legacyHeaders: false,
 })
