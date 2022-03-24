@@ -33,4 +33,4 @@ app.get("*", (_req, res) => {
 });
 
 //Server Listener
-app.listen(PORT, () => console.log("Listening on port 8000"));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
