@@ -1,91 +1,103 @@
 const express = require("express");
 const router = express.Router();
-const { Pool } = require("pg");
-const Postgres = new Pool({ ssl: { rejectUnauthorized: false } });
-const dotenv = require("dotenv");
-const findHotelName = require("../middleware/findHotelName");
+const isHotelExist = require("../middleware/isHotelexist");
 const findHotelId = require("../middleware/findHotelId");
-const findHotelCountry = require("../middleware/findHotelCountry");
-const findPriceHotel = require("../middleware/findPriceHotel");
-dotenv.config({
-	path: "./config.env",
-});
+const findHotelName = require("../middleware/findHotelName");
+const Hotels = require("../Schema/hotelSchema");
 
 //Route to get all hotels
-router.get("/", async (_req, res) => {
-	const hotels = await Postgres.query("SELECT * FROM hotels");
+router.get("/", async (req, res) => {
+  try {
+    const hotels = await Hotels.find(req.query);
 
-	try {
-		hotels;
-	} catch (err) {
-		return res.status(400).json({
-			message: "An error happened...",
-		});
-	}
-	res.json(hotels.rows);
+    if (hotels.length < 1) {
+      return res.status(404).json({
+        message: "no hotels found",
+      });
+    } else {
+      res.json(hotels);
+    }
+  } catch (err) {
+    return res.status(400).json({
+      message: "An error happened...",
+    });
+  }
 });
 
 //route to get hotel by Id
 router.get("/id/:id", findHotelId, async (req, res) => {
-	const hotel = await Postgres.query("SELECT * FROM hotels WHERE hotels.id=$1", [req.hotel.id]);
-
-	try {
-		hotel;
-	} catch (err) {
-		return res.status(400).json({
-			message: "An error happened...",
-		});
-	}
-	res.json(hotel.rows);
+  try {
+    const hotels = await Hotels.findById(req.hotel.id);
+    res.json(hotels);
+  } catch (err) {
+    return res.status(400).json({
+      message: "An error happened...",
+    });
+  }
 });
 
 router.get("/name/:name", findHotelName, async (req, res) => {
-	const hotel = await Postgres.query("SELECT * FROM hotels WHERE hotels.name=$1", [req.hotel.name]);
-
-	try {
-		hotel;
-	} catch (err) {
-		return res.status(400).json({
-			message: "An error happened...",
-		});
-	}
-	res.json(hotel.rows);
-});
-
-router.get("/country/:country", findHotelCountry, async (req, res) => {
-	const hotels = await Postgres.query("SELECT * FROM hotels WHERE country=$1", [req.hotel.country]);
-
-	try {
-		hotels;
-	} catch (err) {
-		return res.status(400).json({
-			message: "An error happened...",
-		});
-	}
-	res.json(hotels.rows);
-});
-
-// get hotel by price range
-router.get("/price/:price", findPriceHotel, async (req, res) => {
-    const hotels = await Postgres.query("SELECT * FROM hotels WHERE price_category=$1", [req.hotel.price_category]);
-
-	try {
-		hotels;
-	} catch (err) {
-		return res.status(400).json({
-			message: "An error happened...",
-		});
-	}
-	res.json(hotels.rows);
+  try {
+    const hotels = await Hotels.find({ name: req.hotel.name });
+    res.json(hotels);
+  } catch (err) {
+    return res.status(400).json({
+      message: "An error happened...",
+    });
+  }
 });
 
 // route to add a new hotel
-router.post("/", (req, res) => {});
+router.post("/new", isHotelExist, async (req, res) => {
+  try {
+    await Hotels.create(req.body);
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({
+      message: "an error happened",
+    });
+  }
+  res.status(201).json({
+    message: "hotels added",
+  });
+});
 
 // Update
-router.patch("/:id/name", (req, res) => {});
+router.patch("/update/:id/", async (req, res) => {
+  try {
+    await Hotels.findByIdAndUpdate(req.params.id, {
+      address: req.body.address,
+      city: req.body.city,
+      country: req.body.country,
+      stars: req.body.stars,
+      hasSpa: req.body.hasSpa,
+      hasPool: req.body.hasPool,
+      priceCategory: req.body.priceCategory,
+    });
+    res.json({
+      message: "hotel updated",
+    });
+  } catch (err) {
+    console.error(err);
+    res.json({
+      message: " an error happened",
+    });
+  }
+});
 
-router.delete("/:id", (req, res) => {});
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await Hotels.find({ name: req.params.id }).remove().exec();
+    res.json({
+      message: "hotel deleted",
+    });
+  } catch (err) {
+    console.error(err);
+    res.json({
+      message: "an error happened",
+    });
+  }
+});
 
 //copy and paste it postman
 

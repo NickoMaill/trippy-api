@@ -1,14 +1,8 @@
-const { Pool } = require("pg");
-const Postgres = new Pool({ ssl: { rejectUnauthorized: false } });
-const dotenv = require("dotenv");
-dotenv.config({
-	path: "./config.env",
-});
+const Hotels = require("../Schema/hotelSchema");
 
 async function findHotelName(req, res, next) {
-	const hotels = await Postgres.query("SELECT * FROM hotels");
-	const hotelsData = hotels.rows;
-	const hotel = hotelsData.find((hotel) => {
+	const hotels = await Hotels.find();
+	const hotel = hotels.find((hotel) => {
 		return hotel.name.toLowerCase().replace(" ", "-") === req.params.name.toLowerCase().replace(" ", "-");
 	});
 	req.hotel = hotel;
